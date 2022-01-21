@@ -27,9 +27,15 @@ import {
   mapDependencies,
   fetchPackageInfo,
   Lockfile,
+  YarnInfoInspectData,
 } from '../../lib/versioning';
 import { forbiddenDuplicatesFilter } from './lint';
 import { BACKSTAGE_JSON } from '@backstage/cli-common';
+import {
+  getByReleaseLine,
+  getByVersion,
+  ReleaseManifest,
+} from '@backstage/release-manifest';
 
 const DEP_TYPES = [
   'dependencies',
@@ -59,7 +65,22 @@ export default async (cmd: Command) => {
     console.log(`Using custom pattern glob ${pattern}`);
   }
 
-  const findTargetVersion = createVersionFinder(cmd.releaseLine);
+  if (cmd.releaseLine && cmd.backstageRelease) {
+    throw new Error(
+      'Cannot specify both --release-line and --backstage-release',
+    );
+  }
+
+  let releaseManifest;
+  if (cmd.backstageRelease) {
+    releaseManifest = await getByVersion({ version: cmd.backstageRelease });
+  } else if (cmd.releaseLine) {
+    releaseManifest = await getByReleaseLine({ releaseLine: cmd.releaseLine });
+  }
+  const findTargetVersion = createVersionFinder({
+    releaseLine: cmd.releaseLine,
+    releaseManifest,
+  });
 
   // First we discover all Backstage dependencies within our own repo
   const dependencyMap = await mapDependencies(paths.targetDir, pattern);
@@ -270,14 +291,22 @@ export default async (cmd: Command) => {
   }
 };
 
-export function createVersionFinder(
-  releaseLine = 'latest',
-  packageInfoFetcher = fetchPackageInfo,
-) {
+export function createVersionFinder(options: {
+  releaseLine?: string;
+  packageInfoFetcher?: () => Promise<YarnInfoInspectData>;
+  releaseManifest?: ReleaseManifest;
+}) {
+  const {
+    releaseLine = 'latest',
+    packageInfoFetcher = fetchPackageInfo,
+    releaseManifest,
+  } = options;
   // The main release line is just an alias for latest
   const distTag = releaseLine === 'main' ? 'latest' : releaseLine;
   const found = new Map<string, string>();
-
+  const releasePackages = new Map(
+    releaseManifest?.packages.map(p => [p.name, p.version]),
+  );
   return async function findTargetVersion(name: string) {
     const existing = found.get(name);
     if (existing) {
@@ -285,6 +314,11 @@ export function createVersionFinder(
     }
 
     console.log(`Checking for updates of ${name}`);
+    const manifestVersion = releasePackages.get(name);
+    if (manifestVersion) {
+      return manifestVersion;
+    }
+
     const info = await packageInfoFetcher(name);
     const latestVersion = info['dist-tags'].latest;
     if (!latestVersion) {
