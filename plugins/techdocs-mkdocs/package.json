@@ -1,7 +1,7 @@
 {
-  "name": "@backstage/plugin-techdocs",
-  "description": "The Backstage plugin that renders technical documentation for your components",
-  "version": "0.13.2",
+  "name": "@backstage/plugin-techdocs-mkdocs",
+  "description": "The Backstage plugin that renders technical documentation using mkdocs for your components",
+  "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/backstage/backstage",
-    "directory": "plugins/techdocs"
+    "directory": "plugins/techdocs-mkdocs"
   },
   "keywords": [
     "backstage",
@@ -32,30 +32,17 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/catalog-model": "^0.9.10",
-    "@backstage/config": "^0.1.13",
-    "@backstage/core-components": "^0.8.7",
+    "@backstage/core-components": "^0.8.5",
     "@backstage/core-plugin-api": "^0.6.0",
-    "@backstage/errors": "^0.2.0",
     "@backstage/integration": "^0.7.2",
-    "@backstage/integration-react": "^0.1.20",
-    "@backstage/plugin-catalog": "^0.7.11",
-    "@backstage/plugin-catalog-react": "^0.6.13",
-    "@backstage/plugin-search": "^0.6.1",
-    "@backstage/plugin-techdocs-mkdocs": "^0.0.1",
+    "@backstage/integration-react": "^0.1.19",
+    "@backstage/plugin-techdocs": "^0.13.0",
     "@backstage/theme": "^0.2.14",
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "4.0.0-alpha.57",
-    "@material-ui/styles": "^4.10.0",
     "dompurify": "^2.2.9",
-    "event-source-polyfill": "^1.0.25",
     "git-url-parse": "^11.6.0",
-    "lodash": "^4.17.21",
-    "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
-    "react-text-truncate": "^0.17.0",
-    "react-transition-group": "^4.4.2",
     "react-use": "^17.2.4"
   },
   "peerDependencies": {
@@ -64,10 +51,9 @@
     "react-dom": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.13.1",
-    "@backstage/core-app-api": "^0.5.2",
-    "@backstage/dev-utils": "^0.2.20",
-    "@backstage/test-utils": "^0.2.4",
+    "@backstage/cli": "^0.12.0",
+    "@backstage/dev-utils": "^0.2.18",
+    "@backstage/test-utils": "^0.2.3",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^11.2.5",
     "@testing-library/react-hooks": "^7.0.2",
