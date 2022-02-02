@@ -17,21 +17,24 @@
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 import { InputError, NotFoundError } from '@backstage/errors';
 import { Knex } from 'knex';
+import { groupBy } from 'lodash';
 import {
   EntitiesCatalog,
   EntitiesRequest,
   EntitiesResponse,
-  EntityAncestryResponse,
-  EntityPagination,
-  EntityFilter,
   EntitiesSearchFilter,
+  EntityAncestryResponse,
+  EntityFacetsRequest,
+  EntityFacetsResponse,
+  EntityFilter,
+  EntityPagination,
 } from '../catalog/types';
 import {
   DbFinalEntitiesRow,
+  DbPageInfo,
   DbRefreshStateReferencesRow,
   DbRefreshStateRow,
   DbSearchRow,
-  DbPageInfo,
 } from '../database/tables';
 
 function parsePagination(input?: EntityPagination): {
@@ -294,5 +297,28 @@ export class DefaultEntitiesCatalog implements EntitiesCatalog {
       rootEntityRef: stringifyEntityRef(rootEntity),
       items,
     };
+  }
+
+  async facets(request: EntityFacetsRequest): Promise<EntityFacetsResponse> {
+    const db = this.database;
+    const facetsLowercase = request.facets.map(f =>
+      f.toLocaleLowerCase('en-US'),
+    );
+
+    let query = db<DbSearchRow>('search').whereIn('key', facetsLowercase);
+    if (request?.filter) {
+      query = parseFilter(request.filter, query, db);
+    }
+
+    const entries = await query
+      .groupBy('key', 'value')
+      .select({ key: 'key', value: 'value', count: db.raw('COUNT(*)') });
+
+    const facets: EntityFacetsResponse['facets'] = {};
+    for (const [facet, items] of Object.entries(groupBy(entries, 'key'))) {
+      facets[facet] = items.map(i => ({ value: i.value, count: i.count }));
+    }
+
+    return { facets };
   }
 }

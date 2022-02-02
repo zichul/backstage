@@ -535,4 +535,42 @@ describe('DefaultEntitiesCatalog', () => {
       },
     );
   });
+
+  describe('facets', () => {
+    it.each(databases.eachSupportedId())(
+      'can filter and collect properly',
+      async databaseId => {
+        const { knex } = await createDatabase(databaseId);
+
+        await addEntityToSearch(knex, {
+          apiVersion: 'a',
+          kind: 'k',
+          metadata: { name: 'one' },
+          spec: {},
+        });
+        await addEntityToSearch(knex, {
+          apiVersion: 'a',
+          kind: 'k',
+          metadata: { name: 'two' },
+          spec: {},
+        });
+        await addEntityToSearch(knex, {
+          apiVersion: 'a',
+          kind: 'k2',
+          metadata: { name: 'two' },
+          spec: {},
+        });
+        const catalog = new DefaultEntitiesCatalog(knex);
+
+        await expect(catalog.facets({ facets: ['kind'] })).resolves.toEqual({
+          facets: {
+            kind: [
+              { value: 'k', count: 2 },
+              { value: 'k2', count: 1 },
+            ],
+          },
+        });
+      },
+    );
+  });
 });
