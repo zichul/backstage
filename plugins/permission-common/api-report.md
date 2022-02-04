@@ -5,6 +5,20 @@
 ```ts
 import { Config } from '@backstage/config';
 
+// Warning: (ae-missing-release-tag) "AllOfCriteria" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export type AllOfCriteria<TQuery> = {
+  allOf: NonEmptyArray<PermissionCriteria<TQuery>>;
+};
+
+// Warning: (ae-missing-release-tag) "AnyOfCriteria" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export type AnyOfCriteria<TQuery> = {
+  anyOf: NonEmptyArray<PermissionCriteria<TQuery>>;
+};
+
 // @public
 export type AuthorizeDecision =
   | {
@@ -65,6 +79,13 @@ export function isReadPermission(permission: Permission): boolean;
 // @public
 export function isUpdatePermission(permission: Permission): boolean;
 
+// Warning: (ae-missing-release-tag) "NotCriteria" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export type NotCriteria<TQuery> = {
+  not: PermissionCriteria<TQuery>;
+};
+
 // @public
 export type Permission = {
   name: string;
@@ -103,14 +124,13 @@ export type PermissionCondition<TParams extends unknown[] = unknown[]> = {
 
 // @public
 export type PermissionCriteria<TQuery> =
-  | {
-      allOf: PermissionCriteria<TQuery>[];
-    }
-  | {
-      anyOf: PermissionCriteria<TQuery>[];
-    }
-  | {
-      not: PermissionCriteria<TQuery>;
-    }
+  | AllOfCriteria<TQuery>
+  | AnyOfCriteria<TQuery>
+  | NotCriteria<TQuery>
   | TQuery;
+
+// Warnings were encountered during analysis:
+//
+// src/types/api.d.ts:58:4 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
+// src/types/api.d.ts:62:5 - (ae-forgotten-export) The symbol "NonEmptyArray" needs to be exported by the entry point index.d.ts
 ```
