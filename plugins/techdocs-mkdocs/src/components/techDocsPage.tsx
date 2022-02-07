@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-export * from './MkDocsContent';
-export * from './MkDocsContentTransformers';
-export * from './techDocsPage';
+import React from 'react';
+import { MkDocsContent } from './MkDocsContent';
+
+export const techDocsPage = <MkDocsContent />;

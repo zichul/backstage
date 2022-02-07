@@ -35,11 +35,11 @@ import { TechDocsStatus } from './TechDocsStateIndicator';
 import { TechDocsContent } from './TechDocsContent';
 import { useReaderState } from './useReaderState';
 
-type Props = {
+type Props = PropsWithChildren<{
   entityRef: EntityName;
   withSearch?: boolean;
   onReady?: () => void;
-};
+}>;
 
 const useStyles = makeStyles<BackstageTheme>(theme => ({
   searchBar: {
@@ -102,11 +102,13 @@ export const withTechDocsReaderProvider =
  * todo: Make public or stop exporting (ctrl+f "altReaderExperiments")
  * @internal
  */
+
 export const useTechDocsReader = () => useContext(TechDocsReaderContext);
 
 const TechDocsReaderPage = ({
   onReady = () => {},
   withSearch = true,
+  children,
 }: Omit<Props, 'entityRef'>) => {
   const classes = useStyles();
   const { content, entityName } = useTechDocsReader();
@@ -129,7 +131,7 @@ const TechDocsReaderPage = ({
       )}
       {content && (
         <Grid item xs={12}>
-          <TechDocsContent onLoad={handleOnLoad} />
+          {children || <TechDocsContent onLoad={handleOnLoad} />}
         </Grid>
       )}
     </Grid>

@@ -15,8 +15,9 @@
  */
 
 export * from './Reader';
+export * from './TechDocsReader';
 export * from './TechDocsPage';
-export * from './TechDocsPageHeader/TechDocsPageHeader';
+export * from './TechDocsPageHeader';
 export * from './TechDocsStateIndicator';
 export * from './TechDocsShadowDom';
 export type { TechDocsContentPropsWith } from './TechDocsContent';

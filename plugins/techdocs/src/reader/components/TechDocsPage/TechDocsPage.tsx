@@ -17,14 +17,17 @@
 import React, { useCallback, useState } from 'react';
 import { useOutlet } from 'react-router';
 import { useParams } from 'react-router-dom';
-import useAsync from 'react-use/lib/useAsync';
-import { techdocsApiRef } from '../../../api';
-import { TechDocsNotFound } from '../TechDocsNotFound';
-import { LegacyTechDocsPage } from '../LegacyTechDocsPage';
-import { TechDocsEntityMetadata, TechDocsMetadata } from '../../../types';
+import { useAsync } from 'react-use';
+
 import { EntityName } from '@backstage/catalog-model';
 import { useApi } from '@backstage/core-plugin-api';
 import { Page } from '@backstage/core-components';
+import { techDocsPage } from '@backstage/plugin-techdocs-mkdocs';
+
+import { techdocsApiRef } from '../../../api';
+import { TechDocsNotFound } from '../TechDocsNotFound';
+import { TechDocsReader } from '../TechDocsReader';
+import { TechDocsEntityMetadata, TechDocsMetadata } from '../../../types';
 
 export type TechDocsPageRenderFunction = ({
   techdocsMetadataValue,
@@ -70,7 +73,20 @@ export const TechDocsPage = ({ children }: TechDocsPageProps) => {
     return <TechDocsNotFound errorMessage={entityMetadataError.message} />;
   }
 
-  if (!children) return outlet || <LegacyTechDocsPage />;
+  const entityRef = { kind, namespace, name };
+
+  if (!children) {
+    return (
+      <TechDocsReader
+        techDocsMetadata={techdocsMetadataValue}
+        entityMetadata={entityMetadataValue}
+        entityRef={entityRef}
+        onReady={onReady}
+      >
+        {outlet || techDocsPage}
+      </TechDocsReader>
+    );
+  }
 
   return (
     <Page themeId="documentation">
@@ -78,7 +94,7 @@ export const TechDocsPage = ({ children }: TechDocsPageProps) => {
         ? children({
             techdocsMetadataValue,
             entityMetadataValue,
-            entityRef: { kind, namespace, name },
+            entityRef,
             onReady,
           })
         : children}
