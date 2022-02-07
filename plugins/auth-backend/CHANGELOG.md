@@ -1,5 +1,17 @@
 # @backstage/plugin-auth-backend
 
+## 0.10.0
+
+### Minor Changes
+
+- 08fcda13ef: The `callbackUrl` option of `OAuthAdapter` is now required.
+
+### Patch Changes
+
+- 08fcda13ef: Added a new `cookieConfigurer` option to `AuthProviderConfig` that makes it possible to override the default logic for configuring OAuth provider cookies.
+- Updated dependencies
+  - @backstage/backend-common@0.10.7
+
 ## 0.9.0
 
 ### Minor Changes

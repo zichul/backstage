@@ -1,5 +1,14 @@
 # @backstage/plugin-scaffolder-backend
 
+## 0.15.24
+
+### Patch Changes
+
+- 2bd5f24043: fix for the `gitlab:publish` action to use the `oauthToken` key when creating a
+  `Gitlab` client. This only happens if `ctx.input.token` is provided else the key `token` will be used.
+- Updated dependencies
+  - @backstage/backend-common@0.10.7
+
 ## 0.15.23
 
 ### Patch Changes

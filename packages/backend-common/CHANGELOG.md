@@ -1,5 +1,11 @@
 # @backstage/backend-common
 
+## 0.10.7
+
+### Patch Changes
+
+- 599f3dfa83: chore(deps-dev): bump `@types/concat-stream` from 1.6.1 to 2.0.0
+
 ## 0.10.6
 
 ### Patch Changes

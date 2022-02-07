@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-msgraph
 
+## 0.2.15
+
+### Patch Changes
+
+- 7bb1bde7f6: Minor API cleanups
+
 ## 0.2.14
 
 ### Patch Changes

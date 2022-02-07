@@ -1,5 +1,20 @@
 # example-app
 
+## 0.2.64
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/cli@0.13.2
+  - @backstage/plugin-todo@0.2.0
+  - @backstage/core-components@0.8.8
+  - @backstage/plugin-scaffolder@0.12.2
+  - @backstage/plugin-search@0.6.2
+  - @backstage/plugin-catalog-react@0.6.14
+  - @backstage/plugin-catalog-graph@0.2.10
+  - @backstage/plugin-catalog-import@0.8.1
+  - @backstage/plugin-home@0.4.14
+
 ## 0.2.63
 
 ### Patch Changes
